@@ -1,4 +1,4 @@
-# Agents — Global Operating Instructions111222333
+# Agents — Global Operating Instructions
 
 **Last updated:** 2025-01-15
 
