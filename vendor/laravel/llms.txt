@@ -1,0 +1,19 @@
+# llms.txt — index for LLM agents (Master) — VERIFIED
+[files]
+/AGENTS.md
+/.rules/main/CODE_REVIEW.md
+/SECURITY.md
+/PLAN.md
+/scripts.json
+/phpstan.neon.dist
+/pint.json
+/.rules/meta/AGENTS.meta.md
+/.rules/meta/.rules/main/CODE_REVIEW.md
+/.rules/meta/SECURITY.md
+/.rules/meta/CONTRIBUTING.md
+/.rules/meta/PLAN.md
+/docs/**/*.md
+
+[instructions]
+- Start with AGENTS.md (master). Also read /.rules/meta/AGENTS.meta.md and satisfy ALL Meta Gates.
+- Always produce/refresh PLAN.md and attach evidence for every Gate + Laravel guardrails.

@@ -1,0 +1,96 @@
+name: ci-verified
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_DATABASE: app_test
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_USER: laravel
+          MYSQL_PASSWORD: laravel
+        ports: ["3306:3306"]
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP 8.4 with Xdebug
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          coverage: xdebug
+          tools: composer:v2
+          extensions: pdo_mysql, mbstring, json, tokenizer, xml, ctype, curl, dom, fileinfo
+
+      - name: Cache Composer
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.composer/cache
+            vendor
+          key: composer-${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            composer-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Prepare .env
+        run: |
+          cp .env.example .env || true
+          php artisan key:generate
+          php -r "file_put_contents('.env', preg_replace('/DB_HOST=.*/','DB_HOST=127.0.0.1', file_contents := file_get_contents('.env')));"
+        shell: bash
+
+      - name: Configure DB env
+        run: |
+          php -r 'file_put_contents(".env", preg_replace("/DB_PORT=.*/","DB_PORT=3306", file_get_contents(".env")));'
+          php -r 'file_put_contents(".env", preg_replace("/DB_DATABASE=.*/","DB_DATABASE=app_test", file_get_contents(".env")));'
+          php -r 'file_put_contents(".env", preg_replace("/DB_USERNAME=.*/","DB_USERNAME=laravel", file_get_contents(".env")));'
+          php -r 'file_put_contents(".env", preg_replace("/DB_PASSWORD=.*/","DB_PASSWORD=laravel", file_get_contents(".env")));'
+
+      - name: Wait for MySQL
+        run: |
+          for i in `seq 1 30`; do
+            (echo >/dev/tcp/127.0.0.1/3306) >/dev/null 2>&1 && break
+            echo 'waiting for mysql...'; sleep 2
+          done
+
+      - name: Migrate
+        run: php artisan migrate --force
+
+      - name: Lint (Pint)
+        run: vendor/bin/pint --test
+
+      - name: Typecheck (PHPStan)
+        run: vendor/bin/phpstan analyse --no-progress --memory-limit=1G
+
+      - name: Security (Composer Audit)
+        run: composer audit --format=json
+
+      - name: Tests (parallel + coverage)
+        env:
+          XDEBUG_MODE: coverage
+        run: php artisan test --parallel --log-junit=storage/test-junit.xml --coverage-clover=storage/coverage.xml
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: junit-and-coverage
+          path: |
+            storage/test-junit.xml
+            storage/coverage.xml

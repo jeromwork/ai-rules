@@ -1,0 +1,15 @@
+# Vue vendor manifest
+vendor: vue
+priority_defaults: normal
+scope:
+  include:
+    - "frontend/**/*.vue"
+    - "frontend/**/*.ts"
+    - "frontend/**/*.js"
+    - "src/**/*.vue"
+    - "src/**/*.ts"
+    - "src/**/*.js"
+  exclude:
+    - "app/**"
+notes:
+  - "Applies to Vue SFCs and frontend TypeScript/JavaScript."

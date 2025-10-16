@@ -1,0 +1,11 @@
+{
+  "dev": "php artisan serve",
+  "lint": "vendor/bin/pint --test",
+  "typecheck": "vendor/bin/phpstan analyse --no-progress --memory-limit=1G",
+  "test": "php artisan test --parallel --log-junit=storage/test-junit.xml --coverage-clover=storage/coverage.xml",
+  "e2e": "php artisan test --group=e2e",
+  "bench": "vendor/bin/phpbench run --report=aggregate",
+  "build": "composer install --no-dev --prefer-dist -o",
+  "sec:deps": "composer audit --format=json",
+  "sec:sast": "vendor/bin/phpstan analyse"
+}

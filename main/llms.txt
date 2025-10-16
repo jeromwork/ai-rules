@@ -1,0 +1,13 @@
+# llms.txt — index for LLM agents (Meta) — VERIFIED
+[files]
+/.rules/meta/AGENTS.meta.md
+/.rules/meta/.rules/main/CODE_REVIEW.md
+/.rules/meta/SECURITY.md
+/.rules/meta/CONTRIBUTING.md
+/.rules/meta/PLAN.md
+/docs/**/*.md
+
+[instructions]
+- Treat Meta Gates as mandatory.
+- Produce PLAN.md and evidence for each Gate.
+- Reviewers must use CODE_REVIEW.md to validate evidence.

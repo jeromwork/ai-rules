@@ -1,0 +1,14 @@
+# Laravel vendor manifest
+vendor: laravel
+priority_defaults: normal
+scope:
+  include:
+    - "app/**/*.php"
+    - "routes/**/*.php"
+    - "database/**/*.php"
+    - "config/**/*.php"
+    - "tests/**/*.php"
+  exclude:
+    - "frontend/**"
+notes:
+  - "Applies to backend PHP code following Laravel conventions."

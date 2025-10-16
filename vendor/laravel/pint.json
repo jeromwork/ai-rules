@@ -1,0 +1,1 @@
+{ "preset": "laravel", "rules": { "strict_comparison": true, "strict_param": true } }

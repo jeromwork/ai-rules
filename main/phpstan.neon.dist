@@ -1,0 +1,7 @@
+# phpstan.neon.dist — Larastan — VERIFIED
+includes:
+  - vendor/nunomaduro/larastan/extension.neon
+parameters:
+  paths: [app, tests]
+  level: 7
+  tmpDir: var/phpstan
