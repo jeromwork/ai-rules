@@ -9,7 +9,15 @@ scope:
     - "src/**/*.vue"
     - "src/**/*.ts"
     - "src/**/*.js"
+    - "**/*.vue"
+    - "**/src/**"
+    - "**/public/**"
+    - "**/vite.config.*"
+    - "**/package.json"
   exclude:
     - "app/**"
+    - "**/node_modules/**"
+    - "**/dist/**"
 notes:
   - "Applies to Vue SFCs and frontend TypeScript/JavaScript."
+  - "Includes browser automation rules for Vue development."
